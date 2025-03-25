@@ -7,8 +7,8 @@ dotenv.config({ path: "C:\\Users\\Admin\\OneDrive\\Desktop\\web development\\Ass
 const jwt_key = process.env.JWT_SECRET_KEY;
 const router = express.Router();
 router.post("/createuser", async (req, res) => {
-    const { username, password, cpassword, role } = req.body;
-    if (password !== cpassword) {
+    const { username, password, confirmpassword, role } = req.body;
+    if (password !== confirmpassword) {
         return res.status(400).json({ message: "Passwords do not match" });
     }
     const isExistingUser = await UserModel.findOne({ username });
