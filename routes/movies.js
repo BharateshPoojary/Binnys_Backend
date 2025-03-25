@@ -102,4 +102,62 @@ router.post("/", fetchuser, async (req, res) => {
     }
 })
 
+// PUT /movies/:id - Edit movie details (admin only)
+router.put("/:id", fetchuser, async (req, res) => {
+    const { userid, role } = req;
+    const verifyuser = await UserModel.findById(userid);
+    if (!verifyuser) {
+        return res.status(401).json({ message: "Please login to our platform" });
+    }
+    if (role !== "admin") {
+        return res.status(405).json({ message: "Only admins are allowed to edit movies" });
+    }
+
+    const { title, overview, releaseDate, rating, popularity } = req.body;
+
+    try {
+        const movie = await MovieModel.findById(req.params.id);
+        if (!movie) {
+            return res.status(404).json({ message: "Movie not found" });
+        }
+
+        movie.title = title || movie.title;
+        movie.overview = overview || movie.overview;
+        movie.releaseDate = releaseDate || movie.releaseDate;
+        movie.rating = rating || movie.rating;
+        movie.popularity = popularity || movie.popularity;
+
+        await movie.save();
+
+        res.status(200).json({ message: "Movie updated successfully", movie });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// DELETE /movies/:id - Delete a movie (admin only)
+router.delete("/:id", fetchuser, async (req, res) => {
+    const { userid, role } = req;
+    const verifyuser = await UserModel.findById(userid);
+    if (!verifyuser) {
+        return res.status(401).json({ message: "Please login to our platform" });
+    }
+    if (role !== "admin") {
+        return res.status(405).json({ message: "Only admins are allowed to delete movies" });
+    }
+
+    try {
+        const movie = await MovieModel.findById(req.params.id);
+        if (!movie) {
+            return res.status(404).json({ message: "Movie not found" });
+        }
+
+        await movie.remove();
+
+        res.status(200).json({ message: "Movie deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;
