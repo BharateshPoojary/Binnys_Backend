@@ -30,10 +30,12 @@ router.post("/login", async (req, res) => {
         // console.log("getUserDATA", getUserData)
         const password_compare = await bcrypt.compare(password, getUserData.password)
         if (!password_compare) {
-            return res.status(400).json({ error: "Please try to login with correct credentials" });
+            return res.status(200).json({ error: "Please try to login with correct credentials" });
         }
         const auth_token = jwt.sign({ userid: getUserData.id, role: getUserData.role }, jwt_key);
         return res.status(200).json({ auth_token });
+    } else {
+        return res.status(200).json({ error: "No user found" });
     }
 })
 module.exports = router;

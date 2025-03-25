@@ -6,7 +6,7 @@ const jwt_key = process.env.JWT_SECRET_KEY;
 //This is a custom userdefined middleware function which verifies the token and decodes it to access userid and it is passed to next middleware function 
 const fetchuser = (req, res, next) => {
     try {
-        const auth_token = req.header('auth-token');//this is a token which we have to pass in header of request
+        const auth_token = req.header('authtoken');//this is a token which we have to pass in header of request
         if (!auth_token) {
             return res.status(401).json({ error: "Please use a valid token" });
         }//Using return inside an if function will terminate the exceution of code and returns the response (in our case ) or any thing based on scenario
