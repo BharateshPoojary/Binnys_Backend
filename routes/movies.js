@@ -5,11 +5,7 @@ const UserModel = require("../models/User");
 const MovieModel = require("../models/Movie");
 const dotenv = require("dotenv");
 
-const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
-const multer = require("multer");
-dotenv.config({ path: "C:\\Users\\Admin\\OneDrive\\Desktop\\web development\\Assignment\\Binnys_Backend\\.env.local" })
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+
 router.get("/", fetchuser, async (req, res) => {
     const { userid } = req;
     const verifyuser = await UserModel.findById(userid);
